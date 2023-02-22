@@ -24,12 +24,12 @@ delaunay_core.write_simplices(simplices, '~/data', '1crn')
 
 #### Example 2: Process batch of proteins
 ```Python
-simplices = delaunay_pdb.process_batch_pdb_simplices(['1crn', '1l2y'], '~/Downloads')
+delaunay_pdb.process_batch_pdb_simplices(['1crn', '1l2y'], '~/Downloads')
 ```
 
 #### Example 3: Process ALL proteins in PDB
 ```Python
-simplices = delaunay_pdb.process_all_current_pdbw('~/Downloads')
+delaunay_pdb.process_all_current_pdbs('~/Downloads')
 ```
 
 ### PyMOL Extension
