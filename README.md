@@ -48,7 +48,7 @@ Install New Plugin -> Choose File
 ![Choose File](readme-images/choose-file.png)
 
 <br>
-Navigate to ** PyMOL-Install.zip **, located in this repository and add
+Navigate to PyMOL-Install.zip, located in this repository and add
 
 <br>
 
