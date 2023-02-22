@@ -36,6 +36,32 @@ simplices = delaunay_pdb.process_all_current_pdbw('~/Downloads')
 
 #### Installation
 From menu:
+
 Plugin -> Plugin Manager
 
-! [PyMOL Plugin Manager] (/readme-images/plugin-manager.png)
+![PyMOL Plugin Manager](readme-images/plugin-manager.png)
+
+<br>
+<br>
+Install New Plugin -> Choose File
+
+![Choose File](readme-images/choose-file.png)
+
+<br>
+Navigate to **PyMOL-Install.zip**, located in this repository and add
+
+#### Extract Delaunay Simplices
+
+1CRN example
+
+From PyMOL command line, enter "fetch 1crn"
+
+![fetch 1crn](readme-images/pymol-fetch.png)
+
+<br><br>
+To extract and visualize simplices, enter "delaunay 1crn"
+
+![delaunay 1crn](readme-images/pymol-delaunay.png)
+
+<br><br>
+To export simplices, enter "delaunay_export 1crn, [export dir]"
