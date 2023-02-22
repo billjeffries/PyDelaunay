@@ -130,3 +130,5 @@ dmypy.json
 
 # PyMOL
 .cif
+
+.DS_Store
