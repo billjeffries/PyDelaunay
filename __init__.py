@@ -47,6 +47,11 @@ if cmd is not None:
         cmd.delete("alphas")
 
     @cmd.extend
+    def delaunay_export_by_residue(selection="all", output_dir=None):
+        amino_acids, ca_indices = dpymol.select_alpha_carbons(selection, cmd)
+        simplices, _ = dpymol.get_tessellation_points("alphas", cmd)
+
+    @cmd.extend
     def delaunay_filter(selection='all', name='delaunay_filter'):
         cmd.delete("delaunay_filter")
 

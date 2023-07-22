@@ -25,7 +25,8 @@ amino_acid_codes = {
     "ARG": "R",
     "ASN": "N",
     "ASP": "D",
-    "THR": "T"
+    "THR": "T",
+    "HOH": ""
 }
 
 # Return simplices' indexes and coordinates
@@ -41,12 +42,50 @@ def build_quadruplets(simplices, amino_acids):
         quad_residues = []
         quad_structures = []
         for index in sim:
-            quad_indices.append(index)
-            quad_residues.append(amino_acid_codes[amino_acids[index]])
+            if amino_acids[index] in amino_acid_codes:
+                quad_indices.append(index)
+                quad_residues.append(amino_acid_codes[amino_acids[index]])
             #quad_structures.append(amino_acids[index]['ss'])
         quads.append(quad_residues + quad_indices) # + quad_structures)
 
     return quads
+
+# Build sequential structural representation
+def build_residue_strings(simplices, carbon_alphas, amino_acids,forward=True):
+    strings = []
+    for index in range(len(amino_acids)):
+        residue_index = index
+        r_simplices = [s for s in simplices if residue_index in s]
+        residue_string = []
+        for s in r_simplices:
+            for e in s:
+                if e not in residue_string:
+                    if forward and e>residue_index:
+                        residue_string.append(e)
+                    elif not forward and e < residue_index:
+                        residue_string.append(e)
+        residue_string.sort()
+        final_string = []
+
+        # Process Distances
+        for r in residue_string:
+            distance = carbon_alphas[residue_index] - carbon_alphas[r]
+            if forward:
+                relative = r-residue_index
+            else:
+                relative = residue_index - r
+            if distance <= 10:
+                distance_code = 'A'
+                if distance >= 5 and distance < 7.5:
+                    distance_code = 'B'
+                elif distance >= 7.5:
+                    distance_code = 'C'
+                final_string.append('{}{}'.format(str(relative),distance_code))
+        final_string = ' '.join(final_string)
+        strings.append(final_string)
+
+    return '|'.join(strings)
+
 
 # Calculate edge distances for each simplex
 def calculate_edges(points):

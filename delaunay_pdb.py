@@ -55,7 +55,9 @@ def simplices_from_pdb(pdb_id, download_dir):
 
     simplices = core.build_simplices(points)
     quads = core.build_quadruplets(simplices, amino_acids)
-    return quads
+    sequentials = core.build_residue_strings(simplices, alphas, amino_acids, True)
+
+    return quads, sequentials
 
 def process_batch_pdb_simplices(pdb_ids, download_dir):
     for pdb_id in pdb_ids:
@@ -78,3 +80,4 @@ def process_pdbs_by_similarity(similarity, download_dir):
             pdb_ids = cluster_ids.split(' ')
             print(pdb_ids)
 
+simplices_from_pdb('1crn','/Users/billjeffries/Downloads')
