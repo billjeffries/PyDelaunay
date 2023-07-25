@@ -50,37 +50,47 @@ def build_quadruplets(simplices, amino_acids):
 
     return quads
 
+
 # Build sequential structural representation
+def add_residue(forward, base, neighbor):
+    if forward and neighbor > base:
+        return True 
+    elif not forward and neighbor < base:
+        return True 
+    else:
+        return False
+
+def create_residue_string(forward, ca1, ca2, base_index, neighbor_index):
+    distance = ca1 - ca2
+    if forward:
+        relative = neighbor_index-base_index
+    else:
+        relative = base_index - neighbor_index
+    residue_code = ''
+    if distance <= 10:
+        distance_code = 'A'
+        if distance >= 5 and distance < 7.5:
+            distance_code = 'B'
+        elif distance >= 7.5:
+            distance_code = 'C'
+        residue_code = '{}{}'.format(str(relative),distance_code)
+    return residue_code
+
 def build_residue_strings(simplices, carbon_alphas, amino_acids,forward=True):
     strings = []
-    for index in range(len(amino_acids)):
+    chain_length = len(amino_acids)
+    for index in range(chain_length):
         residue_index = index
         r_simplices = [s for s in simplices if residue_index in s]
-        residue_string = []
-        for s in r_simplices:
-            for e in s:
-                if e not in residue_string:
-                    if forward and e>residue_index:
-                        residue_string.append(e)
-                    elif not forward and e < residue_index:
-                        residue_string.append(e)
+
+        residue_string = [e for s in r_simplices for e in s if add_residue(forward,residue_index, e)]
+        residue_string = list(dict.fromkeys(residue_string))
         residue_string.sort()
         final_string = []
 
         # Process Distances
-        for r in residue_string:
-            distance = carbon_alphas[residue_index] - carbon_alphas[r]
-            if forward:
-                relative = r-residue_index
-            else:
-                relative = residue_index - r
-            if distance <= 10:
-                distance_code = 'A'
-                if distance >= 5 and distance < 7.5:
-                    distance_code = 'B'
-                elif distance >= 7.5:
-                    distance_code = 'C'
-                final_string.append('{}{}'.format(str(relative),distance_code))
+        final_string = [create_residue_string(forward,carbon_alphas[residue_index],carbon_alphas[r],residue_index,r) for r in residue_string]
+        final_string = [s for s in final_string if len(s)>0]
         final_string = ' '.join(final_string)
         strings.append(final_string)
 

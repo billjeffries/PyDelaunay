@@ -1,4 +1,9 @@
 import warnings
+import sys
+import Bio
+import Bio.PDB
+import Bio.SeqRecord
+
 from . import delaunay_core as core, delaunay_pymol as dpymol
 
 try:
@@ -46,10 +51,31 @@ if cmd is not None:
 
         cmd.delete("alphas")
 
-    @cmd.extend
-    def delaunay_export_by_residue(selection="all", output_dir=None):
-        amino_acids, ca_indices = dpymol.select_alpha_carbons(selection, cmd)
+    @cmd.extend 
+    def delaunay_export_residues(selection="all", output_dir=None):
+        amino_acids, _ = dpymol.select_alpha_carbons(selection, cmd)
         simplices, _ = dpymol.get_tessellation_points("alphas", cmd)
+        try:
+            pdb_parser = Bio.PDB.PDBParser(QUIET=True)
+            cmd.save("{}.pdb".format(selection),selection)  
+            struct = pdb_parser.get_structure(selection, '{}.pdb'.format(selection))
+            amino_acid_names = []
+            for r in struct.get_residues():
+                amino_acid_names.append(r.get_resname())
+            calphas = [ atom for atom in struct.get_atoms() if atom.get_fullname() == " CA " ]
+        except Exception as err:
+            print("Cannot load Carbon Alphas: {}".format(str(err)), file=sys.stderr)
+            return None 
+
+        residues = core.build_residue_strings(simplices, calphas, amino_acid_names, True)
+
+        output_file = '{}/{}.txt'.format(output_dir, selection)
+        text_file = open(output_file, "w")
+        text_file.write(residues)
+        text_file.close()
+        print("{} exported to {}".format(selection, output_file))
+
+        cmd.delete("alphas")
 
     @cmd.extend
     def delaunay_filter(selection='all', name='delaunay_filter'):
