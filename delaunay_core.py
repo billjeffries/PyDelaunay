@@ -85,7 +85,8 @@ def build_residue_strings(simplices, carbon_alphas, amino_acids,forward=True):
 
         residue_string = [e for s in r_simplices for e in s if add_residue(forward,residue_index, e)]
         residue_string = list(dict.fromkeys(residue_string))
-        residue_string.sort()
+        residue_string.sort(reverse=forward==False)
+        
         final_string = []
 
         # Process Distances
@@ -139,6 +140,13 @@ def write_simplices(quadruplets, output_dir, simplices_name):
     output_filename = os.path.join(output_dir, simplices_filename)
     with open(output_filename, "w") as f:
         np.savetxt(f, quadruplets, fmt="%s", delimiter=',')
+
+# Write residues to file
+def write_residues(residues_string, output_dir, simplices_name, forward=True):
+    output_file = '{}/{}_del_residues_{}.txt'.format(output_dir, simplices_name,"f" if forward else "b")
+    text_file = open(output_file, "w")
+    text_file.write(residues_string)
+    text_file.close()
 
 def read_pdb_ids(filename):
     with open(filename) as f:

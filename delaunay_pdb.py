@@ -55,14 +55,17 @@ def simplices_from_pdb(pdb_id, download_dir):
 
     simplices = core.build_simplices(points)
     quads = core.build_quadruplets(simplices, amino_acids)
-    sequentials = core.build_residue_strings(simplices, alphas, amino_acids, True)
+    sequentials_fwd = core.build_residue_strings(simplices, alphas, amino_acids, True)
+    sequentials_back = core.build_residue_strings(simplices, alphas, amino_acids, False)
 
-    return quads, sequentials
+    return quads, sequentials_fwd, sequentials_back
 
 def process_batch_pdb_simplices(pdb_ids, download_dir):
     for pdb_id in pdb_ids:
-        simplices = simplices_from_pdb(pdb_id, download_dir)
+        simplices, residues_fwd, residues_back = simplices_from_pdb(pdb_id, download_dir)
         core.write_simplices(simplices, download_dir, pdb_id)
+        core.write_residues(residues_fwd,download_dir,pdb_id,True)
+        core.write_residues(residues_back,download_dir,pdb_id,False)
 
 def process_all_current_pdbs(download_dir):
     with urllib.request.urlopen("https://data.rcsb.org/rest/v1/holdings/current/entry_ids") as url:
