@@ -70,6 +70,7 @@ To export simplices, enter "delaunay_export 1crn, [export dir]".  This creates a
 simplex and written out in the format of A1,A2,A3,A4,I1,I2,I3,I4.  A1-A4 are the one letter of the amino acid codes of the 
 given simplex and I1-I4 are the amino acid indices (zero-based).
 
+### Sequential Description using Simplices
 <br><br>
 Delaunay simplices can also be used to describe a molecule sequentially by residue (Roach, et al 2005<sup>1</sup>).  PyDelaunay provides this functionality through the delaunay_export_residues command.  Continuing with our example, enter 
 "delaunay_export_residues 1crn, [export dir], [True/False]".  The last parameter directs the calculation to run in either 
