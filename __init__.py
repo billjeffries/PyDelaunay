@@ -52,7 +52,7 @@ if cmd is not None:
         cmd.delete("alphas")
 
     @cmd.extend 
-    def delaunay_export_residues(selection="all", output_dir=None):
+    def delaunay_export_residues(selection="all", output_dir=None, forward=True):
         amino_acids, _ = dpymol.select_alpha_carbons(selection, cmd)
         simplices, _ = dpymol.get_tessellation_points("alphas", cmd)
         try:
@@ -67,9 +67,9 @@ if cmd is not None:
             print("Cannot load Carbon Alphas: {}".format(str(err)), file=sys.stderr)
             return None 
 
-        residues = core.build_residue_strings(simplices, calphas, amino_acid_names, True)
+        residues = core.build_residue_strings(simplices, calphas, amino_acid_names, forward)
 
-        output_file = '{}/{}.txt'.format(output_dir, selection)
+        output_file = '{}/{}_del_residues_{}.txt'.format(output_dir, selection,"f" if forward else "b")
         text_file = open(output_file, "w")
         text_file.write(residues)
         text_file.close()
