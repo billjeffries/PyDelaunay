@@ -1,0 +1,5 @@
+Bio==1.6.2
+biopython==1.80
+numpy==1.22.4
+pymol==0.1.0
+scipy==1.6.2
